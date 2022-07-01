@@ -1,0 +1,67 @@
+- hosts: publicVMS
+  become: true
+  vars:
+    load_balncer_ip: __load_balncer_ip__
+    okta_org_url: __okta_org_url__
+    okta_client_id: __okta_client_id__
+    okta_client_secret: __okta_client_secret__
+    pghost: __pghost__
+    pgusername: __pgusername__
+    pgdatabase: __pgdatabase__
+    pgpassword: __pgpassword__
+
+  tasks:
+    - name: copy my file
+      synchronize:
+        src: /home/Itzik/Itzik/myagent/.r/r1/a/_weightapp-ar
+        dest: /home/Itzik/bootcamp
+
+    - name: install node version 14
+      become: true
+      shell: curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash - && sudo apt-get install -y nodejs
+
+    - name: Creating a file with content
+      copy:
+        dest: "/home/Itzik/bootcamp/_weightapp-ar/.env"
+        content: |
+          ###
+          PORT=8080
+          ###internal ip addrass of the vm
+          HOST={{ ansible_default_ipv4.address }}
+          NODE_ENV=development
+
+          ###extrnal host url
+          HOST_URL={{ load_balncer_ip }}
+
+          COOKIE_ENCRYPT_PWD=superAwesomePasswordStringThatIsAtLeast32CharactersLong!
+          ### Okta configuration
+          OKTA_ORG_URL={{ okta_org_url }}
+          OKTA_CLIENT_ID={{ okta_client_id }}
+          OKTA_CLIENT_SECRET={{ okta_client_secret }}
+          ### Postgres configuration
+          ###internal db server ip
+          ###should be server name
+          PGHOST={{ pghost }}
+          PGUSERNAME={{ pgusername }}
+          PGDATABASE={{ pgdatabase }}
+          PGPASSWORD={{ pgpassword }}
+          PGPORT=5432
+
+    - name: install dependcies
+      shell: |
+        cd /home/Itzik/bootcamp/_weightapp-ar  && npm install
+
+    - name: run initDB
+      shell: |
+        cd /home/Itzik/bootcamp/_weightapp-ar  && npm run initdb
+
+    - cron:
+        name: "a job for reboot"
+
+        special_time: reboot
+
+        job: "sh -c 'cd /home/Itzik/bootcamp/_weightapp-ar  && npm run dev'"
+
+    - name: reboot the machines
+
+      reboot:
