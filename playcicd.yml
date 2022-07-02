@@ -69,14 +69,23 @@
         chdir: /home/Itzik/bootcamp/a/_weightapp-ar/
         cmd: npm run initdb
 
-    - name: Creates an entry in crontab
-      ansible.builtin.cron:
-        name: "run webapp"
-        special_time: reboot
-        job: "cd /home/Itzik/bootcamp/a/_weightapp-ar/ && npm run dev"
+    - name: install pm2
+      become: true
+      command: "sudo npm install pm2@latest -g"
+ 
+    - name: pm2 startup
+      become: true
+      command: "pm2 startup"
+ 
+   - name: pm2 to startup
+     become: true
+     command: sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u Itzik --hp /home/Itzik
 
-    - name: Reboot remote servers
-      become: yes
-      ansible.builtin.reboot:
-        msg: "Reboot by Ansible"
-        pre_reboot_delay: 2
+   - name: run app
+     command: "pm2 start 'npm run dev'"
+     args:
+       chdir: /home/Itzik/bootcamp/a/_weightapp-ar/
+    
+    - name: save app in pm2 startup state
+      become: true
+      command: "pm2 save"
