@@ -1,7 +1,0 @@
-[publicVMS]
-10.0.0.4
-10.0.0.5
-10.0.0.6
-[publicVMS:vars]
-ansible_user=Itzik
-ansible_password=IKnowThisIsWeekPassword123
