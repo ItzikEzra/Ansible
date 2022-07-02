@@ -1,9 +1,0 @@
----
-load_balncer_ip: "http://20.81.63.97:8080"
-okta_org_url: "https://dev-93191437.okta.com"
-okta_client_id: "0oa551ha8oaltvIKA5d7"
-okta_client_secret: "K9_Lh23oazLZ9SoMS8IskE2qn1h8OO_IDk-6iY2v"
-pghost: "psqlservicesprod.postgres.database.azure.com"
-pgusername: "postgres"
-pgdatabase: "postgres-prod"
-pgpassword: "p@ssw0rd42"
