@@ -32,7 +32,7 @@
       ansible.builtin.shell:
         chdir: /home/Itzik/bootcamp/a/_weightapp-ar
         cmd: npm install
-
+   
     - name: install nodemon
       become: true
       ansible.builtin.shell: cd /home/Itzik/bootcamp/a/_weightapp-ar/ "npm install --save-dev nodemon@2"
@@ -64,6 +64,8 @@
           PGPASSWORD={{ PGPASSWORD }}
           PGPORT=5432
 
+
+  
     - name: Initalize App's Database
       ansible.builtin.shell:
         chdir: /home/Itzik/bootcamp/a/_weightapp-ar/
@@ -80,3 +82,7 @@
       ansible.builtin.reboot:
         msg: "Reboot by Ansible"
         pre_reboot_delay: 2
+
+
+sudo apt install postgresql-client
+psql "host=psqlservicesstaging.postgres.database.azure.com port=5432 dbname=postgres-staging user=postgres password=p@ssw0rd42 sslmode=require"

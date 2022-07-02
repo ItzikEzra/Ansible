@@ -61,6 +61,7 @@
       command: "pm2 start 'npm run dev'"
       args:
         chdir: /home/Itzik/bootcamp/
+
     - name: save app in pm2 startup state
       become: true
       command: "pm2 save"
